@@ -1,0 +1,31 @@
+.arm {
+    stroke: rgba(117, 81, 52, 1);
+    stroke-width: 5;
+    fill: "none";
+}
+
+circle.wheel {
+    stroke: "black";
+    stroke-width: 2;
+    fill: rgba(0, 0, 0, .75);;
+}
+
+/*  */
+path.wheelPointer {
+    stroke: rgba(255, 255, 255, 1);
+    stroke-width: 2;
+    fill: "none";
+}
+
+path.penPath {
+    stroke: rgba(0, 0, 255, 1);
+    stroke-width: 2;
+    fill: none;
+}
+
+path.lissajousPath {
+    stroke: rgba(0, 0, 0, 1);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+    fill: none;
+}
