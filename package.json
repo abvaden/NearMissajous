@@ -1,0 +1,25 @@
+{
+  "name": "nearmissajous",
+  "version": "1.0.0",
+  "description": "https://www.youtube.com/watch?v=4CbPksEl51Q",
+  "main": "script.js",
+  "dependencies": {
+    "browser-sync": "^2.24.7",
+    "http-server": "^0.11.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "browser-sync start --server --files \"*\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abvaden/NearMissajous.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abvaden/NearMissajous/issues"
+  },
+  "homepage": "https://github.com/abvaden/NearMissajous#readme"
+}
