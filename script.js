@@ -4,7 +4,7 @@ var speedRatio = 3;
 var armALength = 2.5;
 var armBLength = 2.5;
 var dt = .05;
-var baseVelocity = 2 / 2 * Math.PI;
+var baseVelocity = .5 / 2 * Math.PI;
 var initialize2 = true;
 var maxPoints = 250;
 
@@ -16,7 +16,6 @@ function scaleX(point) {
 function scaleY(point) {
     return ((point.y - minY) / (maxY - minY) * svgHeight);
 }
-
 function plot() {
     var pointsLineFunction = d3.line()
         .x((point) => { return scaleX(point); })
@@ -63,40 +62,44 @@ function plot() {
         }
     ];
 
-    svg.select("#wheelA_g")
+    svgD3.select("#wheelA_g")
         .attr("transform", `translate(${scaleX({x: state.wheelA.x})}, ${scaleY({y: state.wheelA.y})})`);
-    svg.select("#wheelA_c")
+    svgD3.select("#wheelA_c")
         .attr("r", state.wheelA.radius / 10 * svgHeight);
-    svg.select("#wheelA_p")
+    svgD3.select("#wheelA_p")
         .attr("d", wheelPointerLineFunction(wheelAPointer));
 
     
-    svg.select("#wheelB_g")
+    svgD3.select("#wheelB_g")
         .attr("transform", `translate(${scaleX({x: state.wheelB.x})}, ${scaleY({y: state.wheelB.y})})`);
-    svg.select("#wheelB_c")
+    svgD3.select("#wheelB_c")
         .attr("r", state.wheelB.radius / 10 * svgHeight);
-    svg.select("#wheelB_p")
+    svgD3.select("#wheelB_p")
         .attr("d", wheelPointerLineFunction(wheelBPointer));
 
-    svg.select("#armA")
+    svgD3.select("#armA")
         .attr("d", pointsLineFunction(armAPoints));
 
-    svg.select("#armB")
+    svgD3.select("#armB")
         .attr("d", pointsLineFunction(armBPoints));
     
     
-    svg.select("#nearMissPoints")
+    svgD3.select("#nearMissPoints")
         .attr("d", pointsLineFunction(state.nearMissPoints));
     
-    svg.select("#lissajousPoints")
+    svgD3.select("#lissajousPoints")
         .data(state.lissajousPoints)
         .attr("d", pointsLineFunction(state.lissajousPoints));
         
 }
 
-var svg = d3.select("svg");
-svgHeight = document.getElementById("svg").clientHeight;
-svgWidth = document.getElementById("svg").clientWidth;
+const svgD3 = d3.select("#svg");
+var svg = document.getElementById("svg");
+svgHeight = svg.clientHeight;
+svgWidth = svg.clientWidth;
+svg.addEventListener("resize", () => {
+    console.log("resized");
+});
 
 // WheelA Group
 d3.select("svg")
