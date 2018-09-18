@@ -93,6 +93,20 @@
                   <small id="maxPointsValue" class="disabled" id="maxPointsDisplay"></small>
                 </div>
             </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="showNearMissajoueInput" onclick="inputParameterChanged();">
+                  <label class="form-check-label" for="showNearMissajoueInput">Show NearMissajous</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="showLissajoueInput" oninput="inputParameterChanged();">
+                  <label class="form-check-label" for="showLissajoueInput">Show Lissajoue</label>
+                </div>
+            </div>
           </form>
 
           <div class="form-row text-center">
@@ -103,9 +117,9 @@
         </div>
         
         <div class="col">
-            <svg id="svg" viewBox="-1 -1 9 9" >
-                <rect width="10" height="10" x="-1" y="-1" style="fill:rgba(0,0, 0, .1);stroke-width:0;stroke:rgb(0,0,0)" />
-            </svg>
+          <svg id="svg" viewBox="-1 -1 9 9" >
+              <rect width="10" height="10" x="-1" y="-1" style="fill:rgba(0,0, 0, .1);stroke-width:0;stroke:rgb(0,0,0)" />
+          </svg>
         </div>
 
         <div class="d-none d-md-block col-2">

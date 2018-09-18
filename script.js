@@ -78,12 +78,15 @@ function plot() {
         .y((point) => { return point.y; })
         .curve(d3.curveCardinal);
     svgD3.select("#nearMissPoints")
-        .attr("d", pointsLineFunction(state.nearMissPoints));
+        .attr("d", pointsLineFunction(state.nearMissPoints))
+        .style("opacity", state.showNearMissajoue ? 1 : 0);
     svgD3.select("#lissajousPoints")
-        .attr("d", pointsLineFunction(state.lissajousPoints));
+        .attr("d", pointsLineFunction(state.lissajousPoints))
+        .style("opacity", state.showLissajoue ? 1 : 0);
     svgD3.select("#lissajousPoint")
         .attr("cx", state.lissajousPoint.x)
-        .attr("cy", state.lissajousPoint.y);
+        .attr("cy", state.lissajousPoint.y)
+        .style("opacity", state.showLissajoue ? 1 : 0);
 }
 
 const svgD3 = d3.select("#svg");
@@ -164,6 +167,8 @@ const state = {
     baseVelocity: .33,
     wheelAThetaOffsetBase: 0,
     wheelBThetaOffsetBase: 0,
+    showNearMissajoue: true,
+    showLissajoue: true,
     wheelA: {
         // x: 3.5,
         // y: 7,
@@ -215,6 +220,8 @@ function inputParameterChanged() {
     state.armB.length = parseFloat(armBLengthInput.value);
     state.wheelAThetaOffsetBase = parseFloat(wheelAThetaOffsetInput.value);
     state.wheelBThetaOffsetBase = parseFloat(wheelBThetaOffsetInput.value);
+    state.showLissajoue = showLissajoueInput.checked;
+    state.showNearMissajoue = showNearMissajoueInput.checked;
 
     Initialize();
     rebindValues();
@@ -392,8 +399,9 @@ function intersectTwoCircles(x1,y1,r1, x2,y2,r2) {
 
 var wheelARadiusInput, wheelBRadiusInput, rotationRatioInput, baseVelocityInput, armALengthInput, armBLengthInput, maxPointsInput;
 var wheelAThetaOffsetInput, wheelBThetaOffsetInput;
-
+var showNearMissajoueInput, showLissajoueInput;
 var maxPointsValue, wheelARadiusInputValue, wheelBRadiusInputValue;
+
 function rebindValues() {
     if (maxPointsInput.value != maxPoints) {
         maxPointsInput.value = maxPoints;
@@ -428,6 +436,13 @@ function rebindValues() {
     if (wheelBThetaOffsetInput.value != state.wheelBThetaOffsetBase) {
         wheelBThetaOffsetInput.value = state.wheelBThetaOffsetBase;
     }
+    if (showLissajoueInput.checked != state.showLissajoue) {
+        showLissajoueInput.checked = state.showLissajoue;
+    }
+    if (showNearMissajoueInput.checked != state.showNearMissajoue) {
+        showNearMissajoueInput.checked = state.showNearMissajoue;
+    }
+
     maxPointsValue.innerHTML = maxPoints.toPrecision(1);
     wheelARadiusInput.innerText = state.wheelA.radius.toPrecision(2);
     wheelBRadiusInput.innerText = state.wheelB.radius.toPrecision(2);
@@ -448,6 +463,8 @@ function onLoad() {
     maxPointsValue = document.getElementById("maxPointsValue");
     wheelAThetaOffsetInput = document.getElementById("wheelAThetaOffsetInput");
     wheelBThetaOffsetInput = document.getElementById("wheelBThetaOffsetInput");
+    showLissajoueInput = document.getElementById("showLissajoueInput");
+    showNearMissajoueInput = document.getElementById("showNearMissajoueInput");
 
     Initialize();
 
