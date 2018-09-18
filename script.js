@@ -1,44 +1,50 @@
 var amplitude1 = .5;
 var amplitude2 = .5;
-var speedRatio = 3;
-var armALength = 2.5;
-var armBLength = 2.5;
+var speedRatio = 2;
+var armALength = 3.5;
+var armBLength = 3.5;
 var dt = .05;
 var baseVelocity = .5 / 2 * Math.PI;
 var initialize2 = true;
-var maxPoints = 250;
+var maxPoints = 500;
 
-var svgWidth;
-var svgHeight;
-function scaleX(point) {
-    return ((point.x - minX) / (maxX - minX) * svgWidth);
-}
-function scaleY(point) {
-    return ((point.y - minY) / (maxY - minY) * svgHeight);
-}
 function plot() {
-    var pointsLineFunction = d3.line()
-        .x((point) => { return scaleX(point); })
-        .y((point) => { return scaleY(point); })
-        .curve(d3.curveCardinal);
-
+    
     var wheelPointerLineFunction = d3.line()
-        .x((point) => {return point.x / 10 * svgWidth; })
-        .y((point) => {return point.y / 10 *  svgHeight; });
+        .x((point) => {return point.x})
+        .y((point) => {return point.y});
+    
+    
+
     const wheelAPointer = [
-        {x: 0, y: 0}, 
+        {x: state.wheelA.x, y: state.wheelA.y}, 
         {
-            x: state.wheelA.radius * Math.cos(state.wheelA.theta),
-            y: state.wheelA.radius * Math.sin(state.wheelA.theta) 
+            x: state.armA.x1,
+            y: state.armA.y1 
         }
     ];
+    svgD3.select("#wheelA_c")
+        .attr("r", state.wheelA.radius)
+        .attr("cx", state.wheelA.x)
+        .attr("cy", state.wheelA.y);
+    svgD3.select("#wheelA_p")
+        .attr("d", wheelPointerLineFunction(wheelAPointer));
+
+    
     const wheelBPointer = [
-        {x: 0, y: 0}, 
+        {x: state.wheelB.x, y: state.wheelB.y}, 
         {
-            x: state.wheelB.radius * Math.cos(state.wheelB.theta),
-            y: state.wheelB.radius * Math.sin(state.wheelB.theta) 
+            x: state.armB.x1,
+            y: state.armB.y1 
         }
     ];
+    svgD3.select("#wheelB_c")
+        .attr("r", state.wheelB.radius)
+        .attr("cx", state.wheelB.x)
+        .attr("cy", state.wheelB.y);
+    svgD3.select("#wheelB_p")
+        .attr("d", wheelPointerLineFunction(wheelBPointer));
+
 
     const armAPoints = [
         {
@@ -50,7 +56,6 @@ function plot() {
             y: state.armA.y2
         }
     ];
-
     const armBPoints = [
         {
             x: state.armB.x1,
@@ -61,45 +66,36 @@ function plot() {
             y: state.armB.y2
         }
     ];
-
-    svgD3.select("#wheelA_g")
-        .attr("transform", `translate(${scaleX({x: state.wheelA.x})}, ${scaleY({y: state.wheelA.y})})`);
-    svgD3.select("#wheelA_c")
-        .attr("r", state.wheelA.radius / 10 * svgHeight);
-    svgD3.select("#wheelA_p")
-        .attr("d", wheelPointerLineFunction(wheelAPointer));
-
-    
-    svgD3.select("#wheelB_g")
-        .attr("transform", `translate(${scaleX({x: state.wheelB.x})}, ${scaleY({y: state.wheelB.y})})`);
-    svgD3.select("#wheelB_c")
-        .attr("r", state.wheelB.radius / 10 * svgHeight);
-    svgD3.select("#wheelB_p")
-        .attr("d", wheelPointerLineFunction(wheelBPointer));
-
     svgD3.select("#armA")
-        .attr("d", pointsLineFunction(armAPoints));
-
+        .attr("d", wheelPointerLineFunction(armAPoints));
     svgD3.select("#armB")
-        .attr("d", pointsLineFunction(armBPoints));
+        .attr("d", wheelPointerLineFunction(armBPoints));
     
     
+
+    var pointsLineFunction = d3.line()
+        .x((point) => { return point.x; })
+        .y((point) => { return point.y; })
+        .curve(d3.curveCardinal);
     svgD3.select("#nearMissPoints")
         .attr("d", pointsLineFunction(state.nearMissPoints));
-    
     svgD3.select("#lissajousPoints")
-        .data(state.lissajousPoints)
         .attr("d", pointsLineFunction(state.lissajousPoints));
-        
+    svgD3.select("#lissajousPoint")
+        .attr("cx", state.lissajousPoint.x)
+        .attr("cy", state.lissajousPoint.y);
 }
 
 const svgD3 = d3.select("#svg");
-var svg = document.getElementById("svg");
-svgHeight = svg.clientHeight;
-svgWidth = svg.clientWidth;
-svg.addEventListener("resize", () => {
-    console.log("resized");
-});
+
+
+// Paper border
+svgD3.append("rect")
+    .attr("class", "paper-rect")
+    .attr("width", 5)
+    .attr("height", 5)
+    .attr("x", 1)
+    .attr("y", 1);
 
 // WheelA Group
 d3.select("svg")
@@ -149,7 +145,12 @@ d3.select("svg")
 d3.select("svg")
     .append("path")
     .attr("id", "nearMissPoints")
-    .attr("class", "penPath");
+    .attr("class", "nearMissPoints");
+d3.select("svg")
+    .append("circle")
+    .attr("id", "lissajousPoint")
+    .attr("r", .05)
+    .attr("class", "lissajousPoint");
 d3.select("svg")
     .append("path")
     .attr("id", "lissajousPoints")
@@ -159,39 +160,90 @@ const state = {
     initialize2: initialize2,
     lissajous_offset_x: 0,
     lissajous_offset_y: 0,
+    rotationRatio: 2,
+    baseVelocity: .33,
+    wheelAThetaOffsetBase: 0,
+    wheelBThetaOffsetBase: 0,
     wheelA: {
-        x: 2,
+        // x: 3.5,
+        // y: 7,
+        x: 0,
+        y: 3,
+        theta: 0,
+        thetaOffset: 0,
+        radius: .75,
+        thetaDot: 0
+    },
+    wheelB: {
+        // x: 7,
+        // y: 3.5,
+        x: 3,
         y: 0,
         theta: 0,
         thetaOffset: 0,
-        radius: amplitude1,
-        thetaDot: baseVelocity * 1.0
-    },
-    wheelB: {
-        x: 0,
-        y: 2,
-        theta: 0,
-        thetaOffset: 0,
-        radius: amplitude2,
-        thetaDot: baseVelocity * speedRatio
+        radius: .75,
+        thetaDot: 0
     },
     armA: {
-        length: armALength,
+        length: 3.5,
         x1: 0,
         y1: 0,
         x2: 0,
         y2: 0
     },
     armB: {
-        length: armBLength,
+        length: 3.5,
         x1: 0,
         y1: 0,
         x2: 0,
         y2: 0
     },
+    lissajousPoint: { x: 0, y: 0 },
     nearMissPoints: [],
     lissajousPoints: []
 };
+
+var interval;
+
+function inputParameterChanged() {
+    maxPoints = parseFloat(maxPointsInput.value);
+    state.baseVelocity = parseFloat(baseVelocityInput.value);
+    state.rotationRatio = parseFloat(rotationRatioInput.value);
+    state.wheelA.radius = parseFloat(wheelARadiusInput.value);
+    state.wheelB.radius = parseFloat(wheelBRadiusInput.value);
+    state.armA.length = parseFloat(armALengthInput.value);
+    state.armB.length = parseFloat(armBLengthInput.value);
+    state.wheelAThetaOffsetBase = parseFloat(wheelAThetaOffsetInput.value);
+    state.wheelBThetaOffsetBase = parseFloat(wheelBThetaOffsetInput.value);
+
+    Initialize();
+    rebindValues();
+    plot();
+}
+
+function playPauseClick() {
+    var btn = document.getElementById("playPauseBtn");
+    var controls = [wheelARadiusInput, rotationRatioInput, wheelBRadiusInput, armALengthInput, armBLengthInput, ];//wheelAThetaOffsetInput, wheelBThetaOffsetInput];
+    if (interval) {
+        btn.innerHTML = "Play"
+        clearInterval(interval);
+        interval = undefined;
+
+        controls.forEach(x => x.disabled = false);
+        document.getElementById("lissajousPoint").style.setProperty("visibility", "hidden");
+    } else {
+        btn.innerHTML = "Stop"
+        document.getElementById("lissajousPoint").style.setProperty("visibility", "visible");
+        controls.forEach(x => x.disabled = true);
+
+        Initialize();
+        interval = setInterval(() => {
+            doStep(dt);
+        
+            plot();
+        }, dt * 1000);
+    }
+}
 
 var t = 0;
 function doStep(dt) {
@@ -246,11 +298,11 @@ function doStep(dt) {
     }
 
     state.lissajousPoint = {
-        x: Math.sin(state.wheelA.theta) * state.wheelA.radius + state.lissajous_offset_x,
-        y: Math.cos(state.wheelB.theta) * state.wheelB.radius + state.lissajous_offset_y
+        x: Math.cos(state.wheelA.theta) * state.wheelA.radius + state.lissajous_offset_x,
+        y: Math.sin(state.wheelB.theta) * state.wheelB.radius + state.lissajous_offset_y
     }
 
-    if (state.nearMissPoints.length >= maxPoints) {
+    while (state.nearMissPoints.length >= maxPoints) {
         state.nearMissPoints.shift();
         state.lissajousPoints.shift();
     }
@@ -261,30 +313,49 @@ function doStep(dt) {
     t += dt;
 }
 
+// Initialize the state after a simulation has been run
 function Initialize() {
-    state.wheelA.theta = state.wheelA.thetaOffset;
-    state.wheelB.theta = state.wheelB.thetaOffset;
+    if (!interval) {
+        state.wheelA.theta = state.wheelAThetaOffsetBase * Math.PI;
+        state.wheelB.theta = state.wheelBThetaOffsetBase * Math.PI;
+        state.wheelA.thetaOffset = state.wheelAThetaOffsetBase * Math.PI;
+        state.wheelB.thetaOffset = state.wheelBThetaOffsetBase * Math.PI;
 
-    state.armA.x1 = (Math.cos(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.x;
-    state.armA.y1 = (Math.sin(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.y;
-    state.armB.x1 = (Math.cos(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.x;;
-    state.armB.y1 = (Math.sin(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.y;;
+        state.armA.x1 = (Math.cos(state.wheelA.theta + Math.PI / 2) * state.wheelA.radius) + state.wheelA.x;
+        state.armA.y1 = (Math.sin(state.wheelA.theta + Math.PI / 2) * state.wheelA.radius) + state.wheelA.y;
+        state.armB.x1 = (Math.cos(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.x;;
+        state.armB.y1 = (Math.sin(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.y;;
 
-    const intersections = intersectTwoCircles(
-        state.armA.x1, 
-        state.armA.y1, 
-        state.armA.length, 
-        state.armB.x1, 
-        state.armB.y1, 
-        state.armB.length);
-    const intersection = state.initialize2 ? intersections[0] : intersections[1];
-    state.armA.x2 = intersection[0];
-    state.armA.y2 = intersection[1];
-    state.armB.x2 = intersection[0];
-    state.armB.y2 = intersection[1];
+        const intersections = intersectTwoCircles(
+            state.armA.x1, 
+            state.armA.y1, 
+            state.armA.length, 
+            state.armB.x1, 
+            state.armB.y1, 
+            state.armB.length);
+        
+        const intersection = (intersections[0][0] < 0) ? intersections[0] : intersections[1];
+        state.armA.x2 = intersection[0];
+        state.armA.y2 = intersection[1];
+        state.armB.x2 = intersection[0];
+        state.armB.y2 = intersection[1];
 
-    state.lissajous_offset_x = intersection[0];
-    state.lissajous_offset_y = intersection[1];
+        state.lissajous_offset_x = intersection[0];
+        state.lissajous_offset_y = intersection[1];
+
+        state.nearMissPoints = [];
+        state.lissajousPoints = [];
+    } else {
+        const aDiff = state.wheelA.thetaOffset - state.wheelAThetaOffsetBase;
+        const bDiff = state.wheelB.thetaOffset - state.wheelBThetaOffsetBase;
+        state.wheelA.theta += aDiff;
+        state.wheelA.thetaOffset = state.wheelAThetaOffsetBase;
+        state.wheelB.theta += bDiff;
+        state.wheelB.thetaOffset = state.wheelBThetaOffsetBase;
+    }
+    state.wheelA.thetaDot = state.baseVelocity * Math.PI;
+    state.wheelB.thetaDot = state.baseVelocity * Math.PI * state.rotationRatio;
+    
 }
 
 // Special thanks to jupdike
@@ -318,15 +389,74 @@ function intersectTwoCircles(x1,y1,r1, x2,y2,r2) {
     // but that one solution will just be duplicated as the code is currently written
     return [[ix1, iy1], [ix2, iy2]];
 }
-  
 
-var minX = -5;
-var maxX = 5;
-var minY = -5;
-var maxY = 5;
-Initialize();
-setInterval(() => {
-    doStep(dt);
+var wheelARadiusInput, wheelBRadiusInput, rotationRatioInput, baseVelocityInput, armALengthInput, armBLengthInput, maxPointsInput;
+var wheelAThetaOffsetInput, wheelBThetaOffsetInput;
 
+var maxPointsValue, wheelARadiusInputValue, wheelBRadiusInputValue;
+function rebindValues() {
+    if (maxPointsInput.value != maxPoints) {
+        maxPointsInput.value = maxPoints;
+    }
+    if (wheelARadiusInput.value != state.wheelA.radius) {
+        wheelARadiusInput.value = state.wheelA.radius.toString();
+    }
+    if (wheelBRadiusInput.value != state.wheelB.radius) {
+        wheelBRadiusInput.value = state.wheelB.radius;
+    }
+    if (wheelAThetaOffsetInput.value != state.wheelAThetaOffsetBase) {
+        wheelAThetaOffsetInput.value = state.wheelAThetaOffsetBase;
+    }
+    if (wheelBThetaOffsetInput.value != state.wheelBThetaOffsetBase) {
+        wheelBThetaOffsetInput.value = state.wheelBThetaOffsetBase;
+    }
+    if (rotationRatioInput.value != state.rotationRatio) {
+        rotationRatioInput.value = state.rotationRatio
+    }
+    if (baseVelocityInput.value != state.baseVelocity) {
+        baseVelocityInput.value = state.baseVelocity;
+    }
+    if (armALengthInput.value != state.armA.length) {
+        armALengthInput.value = state.armA.length;
+    }
+    if (armBLengthInput.value != state.armB.length) {
+        armBLengthInput.value = state.armB.length;
+    }
+    if (wheelAThetaOffsetInput.value != state.wheelAThetaOffsetBase) {
+        wheelAThetaOffsetInput.value = state.wheelAThetaOffsetBase;
+    }
+    if (wheelBThetaOffsetInput.value != state.wheelBThetaOffsetBase) {
+        wheelBThetaOffsetInput.value = state.wheelBThetaOffsetBase;
+    }
+    maxPointsValue.innerHTML = maxPoints.toPrecision(1);
+    wheelARadiusInput.innerText = state.wheelA.radius.toPrecision(2);
+    wheelBRadiusInput.innerText = state.wheelB.radius.toPrecision(2);
+    
+}
+
+function onLoad() {
+
+    wheelARadiusInput = document.getElementById("wheelARadiusInput");
+    wheelBRadiusInput = document.getElementById("wheelBRadiusInput");
+    wheelARadiusInputValue = document.getElementById("wheelARadiusInputValue");
+    wheelBRadiusInputValue = document.getElementById("wheelBRadiusInputValue");
+    rotationRatioInput = document.getElementById("rotationRatioInput");
+    baseVelocityInput = document.getElementById("baseVelocityInput");
+    armALengthInput = document.getElementById("armALengthInput");
+    armBLengthInput = document.getElementById("armBLengthInput");
+    maxPointsInput = document.getElementById("maxPointsInput");
+    maxPointsValue = document.getElementById("maxPointsValue");
+    wheelAThetaOffsetInput = document.getElementById("wheelAThetaOffsetInput");
+    wheelBThetaOffsetInput = document.getElementById("wheelBThetaOffsetInput");
+
+    Initialize();
+
+    rebindValues();
+
+    document.getElementById("lissajousPoint").style.setProperty("visibility", "hidden");
     plot();
-}, dt *1000);
+}
+
+window.onload = (e) => {
+    onLoad();
+};
