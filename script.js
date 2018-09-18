@@ -334,7 +334,7 @@ function Initialize() {
             state.armB.y1, 
             state.armB.length);
         
-        const intersection = (intersections[0][0] < 0) ? intersections[0] : intersections[1];
+        const intersection = (intersections[0][0] > 0 && intersections[0][11] > 0) ? intersections[0] : intersections[1];
         state.armA.x2 = intersection[0];
         state.armA.y2 = intersection[1];
         state.armB.x2 = intersection[0];
