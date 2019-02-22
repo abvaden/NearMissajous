@@ -2,10 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NearMissajous</title>
-    <script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
   </head>
   <body >
     <!-- Title -->
@@ -20,14 +18,14 @@
     <div class="container-fluid" style="margin-top:30px"> 
       <div class="row">
         
-        <div class="d-none d-md-block col-3">
+        <div class="d-none d-md-block col-md-3 col-sm-12">
           <h3>Simulation Parameters</h3>
           <form>
             <div class="form-group">
               <label for="amplitdeGroup">Turn table radii</label>
               <div class="row" id="amplitdeGroup">
                 <div class="col-10">
-                  <input type="range" class="form-control" id="wheelARadiusInput" step="0.01" min=".1" max="1" oninput="inputParameterChanged();" onchange="inputParameterChanged();">
+                  <input type="range" class="form-control" id="wheelARadiusInput" step="0.01" min=".1" max="1">
                 </div>
                 <div class="col-2">
                     <span id="wheelARadiusInputValue"></span>
@@ -35,7 +33,7 @@
               </div>
               <div class="row">
                   <div class="col-10">
-                    <input type="range" class="form-control" id="wheelBRadiusInput" step="0.01" min=".1" max="1" oninput="inputParameterChanged();" onchange="inputParameterChanged();">
+                    <input type="range" class="form-control" id="wheelBRadiusInput" step="0.01" min=".1" max="1">
                   </div>
                   <div class="col-2">
                     <span id="wheelBRadiusInputValue"></span>
@@ -47,10 +45,10 @@
               <label for="offsetGroup">Turn table offset</label>
               <div class="row" id="offsetGroup">
                 <div class="col-10">
-                  <input type="range" class="form-control" id="wheelAThetaOffsetInput" step="0.01" min="-1.0" max="1" oninput="inputParameterChanged();" onchange="inputParameterChanged();">
+                  <input type="range" class="form-control" id="wheelAThetaOffsetInput" step="0.01" min="-1.0" max="1">
                 </div>
                   <div class="col-10">
-                    <input type="range" class="form-control" id="wheelBThetaOffsetInput" step="0.01" min="-1" max="1" oninput="inputParameterChanged();" onchange="inputParameterChanged();">
+                    <input type="range" class="form-control" id="wheelBThetaOffsetInput" step="0.01" min="-1" max="1">
                   </div>
                   <div class="col-2">
                     <span id="wheelBRadiusInputValue"></span>
@@ -61,14 +59,14 @@
             <div class="form-group row">
               <label for="rotationRatioInput" class="col-sm-4 col-form-label">Rotaion Ratio</label>
               <div class="col-sm-8">
-                <input type="number" class="form-control" id="rotationRatioInput" step="0.1" onchange="inputParameterChanged();">
+                <input type="number" class="form-control" id="rotationRatioInput" step="0.1">
               </div>
             </div>
 
             <div class="form-group row">
               <label for="baseVelocityInput" class="col-sm-4 col-form-label">Base Velocity</label>
                 <div class="col-sm-8">
-                  <input type="number" class="form-control" id="baseVelocityInput" step="0.1" onchange="inputParameterChanged();">
+                  <input type="number" class="form-control" id="baseVelocityInput" step="0.1">
                 </div>
             </div>
 
@@ -76,10 +74,10 @@
               <label for="armLengthGroup">Arm Length</label>
               <div class="row" id="amplitdeGroup">
                 <div class="col">
-                  <input type="number" class="form-control" id="armALengthInput" step="0.1" onchange="inputParameterChanged();">
+                  <input type="number" class="form-control" id="armALengthInput" step="0.1">
                 </div>
                 <div class="col">
-                  <input type="number" class="form-control" id="armBLengthInput" step="0.1" onchange="inputParameterChanged();">
+                  <input type="number" class="form-control" id="armBLengthInput" step="0.1">
                 </div>
               </div>
             </div>
@@ -87,7 +85,7 @@
             <div class="form-group row">
               <label for="maxPointsInput" class="col-sm-4 col-form-label">History</label>
                 <div class="col-6">
-                  <input type="range" class="form-control" id="maxPointsInput" step="0.1" min="20" max="500" oninput="inputParameterChanged();" onchange="inputParameterChanged();">
+                  <input type="range" class="form-control" id="maxPointsInput" step="0.1" min="20" max="500">
                 </div>
                 <div class="col-2">
                   <small id="maxPointsValue" class="disabled" id="maxPointsDisplay"></small>
@@ -96,14 +94,14 @@
 
             <div class="form-group">
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="showNearMissajoueInput" onclick="inputParameterChanged();">
+                  <input class="form-check-input" type="checkbox" value="" id="showNearMissajoueInput">
                   <label class="form-check-label" for="showNearMissajoueInput">Show NearMissajous</label>
                 </div>
             </div>
             
             <div class="form-group">
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="showLissajoueInput" oninput="inputParameterChanged();">
+                  <input class="form-check-input" type="checkbox" value="" id="showLissajoueInput">
                   <label class="form-check-label" for="showLissajoueInput">Show Lissajoue</label>
                 </div>
             </div>
@@ -111,15 +109,19 @@
 
           <div class="form-row text-center">
             <div class="col-12">
-                <button id="playPauseBtn" class="btn btn-primary" onclick="playPauseClick();">Run</button>
+                <button id="playPauseBtn" class="btn btn-primary">Run</button>
             </div>
           </div>
         </div>
         
-        <div class="col">
+        <div class="d-none d-md-block col-md-6">
           <svg id="svg" viewBox="-1 -1 9 9" >
               <rect width="10" height="10" x="-1" y="-1" style="fill:rgba(0,0, 0, .1);stroke-width:0;stroke:rgb(0,0,0)" />
           </svg>
+        </div>
+
+        <div class="d-block d-md-none col-12">
+          <p>This is best viewed in landscape mode on a small device </p>
         </div>
 
         <div class="d-none d-md-block col-2">
@@ -137,5 +139,4 @@
       </div>
     </footer> -->
   </body>
-  <script src="./script.js"></script>
 </html>

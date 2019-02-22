@@ -1,3 +1,12 @@
+require('html-loader!./index.html');
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+
+
+import './styles.css';
+var d3 = require('d3');
+
 var amplitude1 = .5;
 var amplitude2 = .5;
 var speedRatio = 2;
@@ -11,12 +20,12 @@ var maxPoints = 500;
 function plot() {
     
     var wheelPointerLineFunction = d3.line()
-        .x((point) => {return point.x})
-        .y((point) => {return point.y});
+        .x(function(point) {return point.x})
+        .y(function(point) {return point.y});
     
     
 
-    const wheelAPointer = [
+    var wheelAPointer = [
         {x: state.wheelA.x, y: state.wheelA.y}, 
         {
             x: state.armA.x1,
@@ -31,7 +40,7 @@ function plot() {
         .attr("d", wheelPointerLineFunction(wheelAPointer));
 
     
-    const wheelBPointer = [
+    var wheelBPointer = [
         {x: state.wheelB.x, y: state.wheelB.y}, 
         {
             x: state.armB.x1,
@@ -46,7 +55,7 @@ function plot() {
         .attr("d", wheelPointerLineFunction(wheelBPointer));
 
 
-    const armAPoints = [
+    var armAPoints = [
         {
             x: state.armA.x1,
             y: state.armA.y1
@@ -56,7 +65,7 @@ function plot() {
             y: state.armA.y2
         }
     ];
-    const armBPoints = [
+    var armBPoints = [
         {
             x: state.armB.x1,
             y: state.armB.y1
@@ -74,8 +83,8 @@ function plot() {
     
 
     var pointsLineFunction = d3.line()
-        .x((point) => { return point.x; })
-        .y((point) => { return point.y; })
+        .x(function(point) { return point.x; })
+        .y(function(point) { return point.y; })
         .curve(d3.curveCardinal);
     svgD3.select("#nearMissPoints")
         .attr("d", pointsLineFunction(state.nearMissPoints))
@@ -89,7 +98,7 @@ function plot() {
         .style("opacity", state.showLissajoue ? 1 : 0);
 }
 
-const svgD3 = d3.select("#svg");
+var svgD3 = d3.select("#svg");
 
 
 // Paper border
@@ -159,7 +168,7 @@ d3.select("svg")
     .attr("id", "lissajousPoints")
     .attr("class", "lissajousPath");
 
-const state = {
+var state = {
     initialize2: initialize2,
     lissajous_offset_x: 0,
     lissajous_offset_y: 0,
@@ -236,15 +245,15 @@ function playPauseClick() {
         clearInterval(interval);
         interval = undefined;
 
-        controls.forEach(x => x.disabled = false);
+        controls.forEach(function(x) { x.disabled = false});
         document.getElementById("lissajousPoint").style.setProperty("visibility", "hidden");
     } else {
         btn.innerHTML = "Stop"
         document.getElementById("lissajousPoint").style.setProperty("visibility", "visible");
-        controls.forEach(x => x.disabled = true);
+        controls.forEach(function(x) {x.disabled = true});
 
         Initialize();
-        interval = setInterval(() => {
+        interval = setInterval(function() {
             doStep(dt);
         
             plot();
@@ -257,11 +266,11 @@ function doStep(dt) {
     state.wheelA.theta = state.wheelA.theta + (dt * state.wheelA.thetaDot);
     state.wheelB.theta = state.wheelB.theta + (dt * state.wheelB.thetaDot);
 
-    const wheelAConnectionX = (Math.cos(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.x;
-    const wheelAConnectionY = (Math.sin(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.y;
+    var wheelAConnectionX = (Math.cos(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.x;
+    var wheelAConnectionY = (Math.sin(state.wheelA.theta) * state.wheelA.radius) + state.wheelA.y;
 
-    const wheelBConnectionX = (Math.cos(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.x;
-    const wheelBConnectionY = (Math.sin(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.y;
+    var wheelBConnectionX = (Math.cos(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.x;
+    var wheelBConnectionY = (Math.sin(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.y;
 
     state.armA.x1 = wheelAConnectionX;
     state.armA.y1 = wheelAConnectionY;
@@ -274,21 +283,21 @@ function doStep(dt) {
     armB.y1 = wheelBConnectionY;
 
 
-    const intersections = intersectTwoCircles(
+    var intersections = intersectTwoCircles(
         state.armA.x1,
         state.armA.y1,
         state.armA.length, 
         state.armB.x1, 
         state.armB.y1, 
         state.armB.length);
-    const x_1 = intersections[0][0];
-    const x_2 = intersections[1][0];
+    var x_1 = intersections[0][0];
+    var x_2 = intersections[1][0];
 
-    const y_1 = intersections[0][1];
-    const y_2 = intersections[1][1];
+    var y_1 = intersections[0][1];
+    var y_2 = intersections[1][1];
 
-    const d1 = Math.sqrt(Math.pow(state.armA.x2 - x_1, 2) + Math.pow(state.armA.y2 - y_1, 2));
-    const d2 = Math.sqrt(Math.pow(state.armA.x2 - x_2, 2) + Math.pow(state.armA.y2 - y_2, 2));
+    var d1 = Math.sqrt(Math.pow(state.armA.x2 - x_1, 2) + Math.pow(state.armA.y2 - y_1, 2));
+    var d2 = Math.sqrt(Math.pow(state.armA.x2 - x_2, 2) + Math.pow(state.armA.y2 - y_2, 2));
 
     if (d1 < d2) {
         state.armA.x2 = x_1;
@@ -313,7 +322,7 @@ function doStep(dt) {
         state.nearMissPoints.shift();
         state.lissajousPoints.shift();
     }
-    const point = {x: state.armA.x2, y: state.armA.y2};
+    var point = {x: state.armA.x2, y: state.armA.y2};
     state.nearMissPoints.push(point);
     state.lissajousPoints.push(state.lissajousPoint);
 
@@ -333,7 +342,7 @@ function Initialize() {
         state.armB.x1 = (Math.cos(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.x;;
         state.armB.y1 = (Math.sin(state.wheelB.theta) * state.wheelB.radius) + state.wheelB.y;;
 
-        const intersections = intersectTwoCircles(
+        var intersections = intersectTwoCircles(
             state.armA.x1, 
             state.armA.y1, 
             state.armA.length, 
@@ -341,7 +350,7 @@ function Initialize() {
             state.armB.y1, 
             state.armB.length);
         
-        const intersection = (intersections[0][0] > 0 && intersections[0][11] > 0) ? intersections[0] : intersections[1];
+        var intersection = (intersections[0][0] > 0 && intersections[0][11] > 0) ? intersections[0] : intersections[1];
         state.armA.x2 = intersection[0];
         state.armA.y2 = intersection[1];
         state.armB.x2 = intersection[0];
@@ -353,8 +362,8 @@ function Initialize() {
         state.nearMissPoints = [];
         state.lissajousPoints = [];
     } else {
-        const aDiff = state.wheelA.thetaOffset - state.wheelAThetaOffsetBase;
-        const bDiff = state.wheelB.thetaOffset - state.wheelBThetaOffsetBase;
+        var aDiff = state.wheelA.thetaOffset - state.wheelAThetaOffsetBase;
+        var bDiff = state.wheelB.thetaOffset - state.wheelBThetaOffsetBase;
         state.wheelA.theta += aDiff;
         state.wheelA.thetaOffset = state.wheelAThetaOffsetBase;
         state.wheelB.theta += bDiff;
@@ -451,21 +460,44 @@ function rebindValues() {
 
 function onLoad() {
 
+    console.log('temp');
+
     wheelARadiusInput = document.getElementById("wheelARadiusInput");
+    wheelARadiusInput.onchange = inputParameterChanged;
+    wheelARadiusInput.oninput = inputParameterChanged;
     wheelBRadiusInput = document.getElementById("wheelBRadiusInput");
+    wheelBRadiusInput.onchange = inputParameterChanged;
+    wheelBRadiusInput.oninput = inputParameterChanged;
     wheelARadiusInputValue = document.getElementById("wheelARadiusInputValue");
     wheelBRadiusInputValue = document.getElementById("wheelBRadiusInputValue");
     rotationRatioInput = document.getElementById("rotationRatioInput");
+    rotationRatioInput.onchange = inputParameterChanged;
+    rotationRatioInput.oninput = inputParameterChanged;
     baseVelocityInput = document.getElementById("baseVelocityInput");
+    baseVelocityInput.onchange = inputParameterChanged;
+    baseVelocityInput.oninput = inputParameterChanged;
     armALengthInput = document.getElementById("armALengthInput");
+    armALengthInput.onchange = inputParameterChanged;
+    armALengthInput.oninput = inputParameterChanged;
     armBLengthInput = document.getElementById("armBLengthInput");
+    armBLengthInput.onchange = inputParameterChanged;
+    armBLengthInput.oninput = inputParameterChanged;
     maxPointsInput = document.getElementById("maxPointsInput");
+    maxPointsInput.onchange = inputParameterChanged;
+    maxPointsInput.oninput = inputParameterChanged;
     maxPointsValue = document.getElementById("maxPointsValue");
     wheelAThetaOffsetInput = document.getElementById("wheelAThetaOffsetInput");
+    wheelAThetaOffsetInput.oninput = inputParameterChanged;
+    wheelAThetaOffsetInput.onchange = inputParameterChanged;
     wheelBThetaOffsetInput = document.getElementById("wheelBThetaOffsetInput");
+    wheelBThetaOffsetInput.oninput = inputParameterChanged;
+    wheelBThetaOffsetInput.onchange = inputParameterChanged;
     showLissajoueInput = document.getElementById("showLissajoueInput");
+    showLissajoueInput.oninput = inputParameterChanged;
     showNearMissajoueInput = document.getElementById("showNearMissajoueInput");
+    showNearMissajoueInput.oninput = inputParameterChanged;
 
+    document.getElementById("playPauseBtn").onclick = playPauseClick;
     Initialize();
 
     rebindValues();
@@ -474,6 +506,6 @@ function onLoad() {
     plot();
 }
 
-window.onload = (e) => {
+window.onload = function (e) {
     onLoad();
 };

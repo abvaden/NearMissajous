@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NearMissajous</title>
+  <link href="main.css" rel="stylesheet"></head>
+  <body >
+    <!-- Title -->
+    <div class=" text-center" style="background: #b2d8d8;">
+      <h1>NearMissajous</h1>
+      <h5>A simulation by <a href="https://github.com/abvaden">@abvaden</a></h5>
+      <span>Based on a creation by Matt Parker</span>
+      <br />
+      <small>That tries to draw a lissajoue curve</small>
+    </div>
+
+    <div class="container-fluid" style="margin-top:30px"> 
+      <div class="row">
+        
+        <div class="d-none d-md-block col-md-3 col-sm-12">
+          <h3>Simulation Parameters</h3>
+          <form>
+            <div class="form-group">
+              <label for="amplitdeGroup">Turn table radii</label>
+              <div class="row" id="amplitdeGroup">
+                <div class="col-10">
+                  <input type="range" class="form-control" id="wheelARadiusInput" step="0.01" min=".1" max="1">
+                </div>
+                <div class="col-2">
+                    <span id="wheelARadiusInputValue"></span>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="col-10">
+                    <input type="range" class="form-control" id="wheelBRadiusInput" step="0.01" min=".1" max="1">
+                  </div>
+                  <div class="col-2">
+                    <span id="wheelBRadiusInputValue"></span>
+                  </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="offsetGroup">Turn table offset</label>
+              <div class="row" id="offsetGroup">
+                <div class="col-10">
+                  <input type="range" class="form-control" id="wheelAThetaOffsetInput" step="0.01" min="-1.0" max="1">
+                </div>
+                  <div class="col-10">
+                    <input type="range" class="form-control" id="wheelBThetaOffsetInput" step="0.01" min="-1" max="1">
+                  </div>
+                  <div class="col-2">
+                    <span id="wheelBRadiusInputValue"></span>
+                  </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="rotationRatioInput" class="col-sm-4 col-form-label">Rotaion Ratio</label>
+              <div class="col-sm-8">
+                <input type="number" class="form-control" id="rotationRatioInput" step="0.1">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="baseVelocityInput" class="col-sm-4 col-form-label">Base Velocity</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" id="baseVelocityInput" step="0.1">
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="armLengthGroup">Arm Length</label>
+              <div class="row" id="amplitdeGroup">
+                <div class="col">
+                  <input type="number" class="form-control" id="armALengthInput" step="0.1">
+                </div>
+                <div class="col">
+                  <input type="number" class="form-control" id="armBLengthInput" step="0.1">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="maxPointsInput" class="col-sm-4 col-form-label">History</label>
+                <div class="col-6">
+                  <input type="range" class="form-control" id="maxPointsInput" step="0.1" min="20" max="500">
+                </div>
+                <div class="col-2">
+                  <small id="maxPointsValue" class="disabled" id="maxPointsDisplay"></small>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="showNearMissajoueInput">
+                  <label class="form-check-label" for="showNearMissajoueInput">Show NearMissajous</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="showLissajoueInput">
+                  <label class="form-check-label" for="showLissajoueInput">Show Lissajoue</label>
+                </div>
+            </div>
+          </form>
+
+          <div class="form-row text-center">
+            <div class="col-12">
+                <button id="playPauseBtn" class="btn btn-primary">Run</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="d-none d-md-block col-md-6">
+          <svg id="svg" viewBox="-1 -1 9 9" >
+              <rect width="10" height="10" x="-1" y="-1" style="fill:rgba(0,0, 0, .1);stroke-width:0;stroke:rgb(0,0,0)" />
+          </svg>
+        </div>
+
+        <div class="d-block d-md-none col-12">
+          <p>This is best viewed in landscape mode on a small device </p>
+        </div>
+
+        <div class="d-none d-md-block col-2">
+          <h3>Description</h3>
+          <p>The simulation being shown is that of a NearMissajous machine, as initially created by <a href="https://www.youtube.com/user/standupmaths">@StandUpMaths</a></p>
+          <br />
+          <p>The NearMissajous machine was devised as machine that could drawing an approximate lissajoue curve. For more information please see the original <a href="https://www.youtube.com/watch?v=4CbPksEl51Q">video</a> created by <a href="https://www.youtube.com/user/standupmaths">@StandUpMaths</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- <footer class="footer">
+      <div class="container">
+          <p>Footer</p>
+      </div>
+    </footer> -->
+  <script type="text/javascript" src="main.bundle.js"></script></body>
+</html>
