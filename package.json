@@ -4,7 +4,7 @@
   "description": "https://www.youtube.com/watch?v=4CbPksEl51Q",
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "d3": "^5.9.1",
+    "d3": "^7.6.1",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.7"
   },
